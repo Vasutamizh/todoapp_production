@@ -16,6 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path
+from django.views.static import serve
+from django.conf import settings
 from app import views as view
 
 urlpatterns = [
@@ -23,5 +25,8 @@ urlpatterns = [
     path('api', view.taskView),
     path('api/history', view.taskHistory),
     path('', view.index),
+    re_path(r'^(?P<path>manifest\.json)$', serve, {'document_root': settings.BASE_DIR / 'pwa'}),
+    re_path(r'^(?P<path>service-worker\.js)$', serve, {'document_root': settings.BASE_DIR / 'pwa'}),
+    re_path(r'^icons/(?P<path>.*)$', serve, {'document_root': settings.BASE_DIR / 'pwa' / 'icons'}),
     re_path(r'^.*$', view.index, name='index'), 
 ]
